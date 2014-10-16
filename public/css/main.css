@@ -1,0 +1,16 @@
+.navbar-ltBlue {background:#6dcff6;}
+.wFull {width:100%;}
+.rel {position: relative;}
+.b1p {bottom:1;}
+.centerCW {position: absolute; left: 48%; top:48%;}
+.mb0 {margin-bottom:0 !important;}
+.p10 {padding:10px;}
+.pt10 {padding-top:10px !important;}
+.ml10 {margin-left: 10px;}
+.navbar-inverse .navbar-brand {color: #000;}
+.navbar-inverse {border:0;}
+.navbar-toggle {background:#000;}
+.navbar { border-radius: 0px;}
+.logo {float:left; margin-right: 10px;}
+.navbar-brand {padding-top:0 !important;padding-bottom: 0 !important;}
+.navbar-brand p {padding-top: 10px; padding-bottom: 25px;}
