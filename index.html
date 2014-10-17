@@ -5,11 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Check the location, ratings, and crime data surrounding various child care facilities">
-    <title>Open Child Care</title>
+    <title>Open Child Care Center for Virginia</title>
     <meta name="author" content="Team Ghost">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="./public/css/main.css">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3MVQel0mEq0hYW8Wy-Knmr3mFKP8mrmA"></script>
+    <!-- Short Title for iOS Springboard -->
+    <meta name="apple-mobile-web-app-title" content="Childcare">
+    <!-- Tells iOS that is can use true full screen Web Clips -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- iOS Springboard Icons -->
+    <!-- iPad, iOS 7, retina -->
+    <link href="apple-touch-icon-152x152.png" sizes="152x152" rel="apple-touch-icon">
+    <!-- iPad, iOS 6, retina -->
+    <link href="apple-touch-icon-144x144.png" sizes="144x144" rel="apple-touch-icon">
+    <!-- iPhone, iOS 7, retina -->
+    <link href="apple-touch-icon-120x120.png" sizes="120x120" rel="apple-touch-icon">
+    <!-- iPhone ,iOS 6, retina -->
+    <link href="apple-touch-icon-114x114.png" sizes="114x114" rel="apple-touch-icon">
+    <!-- iPad, iOS 7 -->
+    <link href="apple-touch-icon-76x76.png" sizes="76x76" rel="apple-touch-icon">
+    <!-- iPad, iOS 6 -->
+    <link href="apple-touch-icon-72x72.png" sizes="72x72" rel="apple-touch-icon">
+    <!-- iPhone, iOS 7 -->
+    <link href="apple-touch-icon-60x60.png" sizes="60x60" rel="apple-touch-icon">
+    <!-- iPhone, iOS 6 -->
+    <link href="apple-touch-icon-57x57.png" sizes="57x57" rel="apple-touch-icon">
+    <!-- Status Bar -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=open+sans">
+    <style>
+        body {
+            font-family: 'open sans', serif;
+        }
+    </style>
 </head>
 <body>
 <div class="rel">
@@ -17,38 +46,59 @@
         <div class="container rel">
             <div class="navbar-header ">
                 <button type="button" style="border:0;" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <div class="fa fa-search fa-6"></div>
                 </button>
                 <div class="pt10">
-                    <img src="./public/OCCC_Logo_tricolor.png" class="logo navbar-brand">
-                    <a class="navbar-brand" href="#"><p>Open Child Care</p></a>
+                    <img src="./public/OCCC_Logo_tricolor.png" class="logo unit navbar-brand">
+                    <a class="navbar-brand pl0" href="#"><p class="wrappable">Open Child Care Center</p></a>
                 </div>
             </div>
             <div class="navbar-collapse collapse">
                 <form class="navbar-form navbar-right" role="form">
                     <div class="form-group">
-                        <input type="text" id="zipInput" placeholder="Zipcode" class="form-control">
+                        <input type="text" id="zipInput" placeholder="Facility or City or Zip" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-success">Search</button>
                 </form>
-            </div><!--/.navbar-collapse -->
+            </div>
         </div>
     </div>
 </div>
-
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div id="missionStatement">
-        <div class="p10 ml10"><p>Dedicated to transparency in child care ratings and safety.</p></div>
+<div id="missionStatement" class="bgLtGry">
+        <div class="p10 ml10"><p class="container fs20">Dedicated to transparency in child care ratings and safety.</p></div>
+</div>
+<div id="myModal" class="modal bgLtBlu fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header bgLav">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h2 id="myModalLabel">Modal header</h2>
+    </div>
+    <div class="modal-body p0 bgLtBlu">
+        <div class="fs20 bold p20">
+            <span id="myModalAddress" class="dBlock">One fine body…</span>
+            <span id="myModalCity" class="dInline">One fine body…</span>, <span id="myModalState" class="dInline"></span> <span id="myModalZip" class="dInline"></span>
+            <p><a href="#" id="myModalPhone">One fine body…</a></p>
+        </div>
+        <div class="bgLtPnk p20 line">
+            <img src="./public/images/QRIS_logo.gif" class="unit" height="100px">
+            <div class="p20 unit">
+                <p class="fs20 wrappable">Virginia Star Quality Initiative</p>
+                <div class="pt10">
+                    <span class="fs20">Rating:</span>
+                    <span class="ratingStars" id="ratingStars"></span>
+                    <span id="ratingText" class="fs20 ml10"></span>
+                </div>
+                <p class="fs20 pt10"><span id="expMess">Expiration Date of Inspection:</span> <span id="expire" class="wrappable"></span></p>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="map-canvas" class="wFull hFull">
     <img src="./public/images/loading.gif" class="centerCW">
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript" src="./public/js/map.js"></script>
+<script src="http://www.google.com/jsapi"></script>
+<script src="./public/js/map.js"></script>
 </body>
 </html>
