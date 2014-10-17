@@ -2,10 +2,11 @@ var mapOnPage,
     winHeight = $(window).outerHeight(),
     navHeight = $(".navbar").outerHeight(),
     jumboHeight = $(document.getElementById("missionStatement")).outerHeight(),
-    mapSize = winHeight - navHeight - jumboHeight;
+    mapSize = winHeight - navHeight - jumboHeight,
+    markers = [],
+    myLocation = null;
 
 function initialize() {
-
     var mapOptions = {
         zoom: 16
     };
@@ -37,7 +38,7 @@ function initialize() {
 
     google.maps.event.addListenerOnce(mapOnPage, 'tilesloaded', function(){
         google.maps.event.addListenerOnce(mapOnPage, 'tilesloaded', function(){
-            loadXMLFile();
+            //loadXMLFile();
         });
     });
 }
@@ -59,25 +60,15 @@ function handleNoGeolocation(errorFlag) {
     mapOnPage.setCenter(options.position);
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
-
-$().ready(function(){
-    google.maps.event.addDomListener(window, 'load', initialize);
-    $(".hFull").height(mapSize);
-});
-$( window ).resize(function() {
-    var winHeight = $(window).outerHeight(),
-        navHeight = $(".navbar").outerHeight(),
-        jumboHeight = $(document.getElementById("missionStatement")).outerHeight(),
-        mapSize = winHeight - navHeight - jumboHeight;
-    $(".hFull").height(mapSize);
-});
-
 function loadXMLFile() {
-    var filename = './sample_xml_results3.xml';
+    var input = $(document.getElementById('zipInput')).val(),
+        filename = '/Hackathon/public/db/getByZip.php';
+        //filename = './sample_xml_results3.xml';
+		//alert(input);
     $.ajax({
-        type: "GET",
-        url: filename,
+        type: "POST",
+        //type:"GET",
+        url: filename+"?"+input,
         dataType: "xml",
         success: parseXML,
         error: onXMLLoadFailed
@@ -97,9 +88,7 @@ function loadXMLFile() {
                 phone = $(this).attr("phone"),
                 starRating = $(this).attr("starRating"),
                 expireDate = $(this).attr("expireDate"),
-                lat = $(this).attr("lat"),
-                lng = $(this).attr("lng"),
-                pos = new google.maps.LatLng(lat,lng);
+                pos = new google.maps.LatLng($(this).attr("lat"),$(this).attr("lng"));
 
             var newMarker = new google.maps.Marker({
                 map: mapOnPage,
@@ -108,20 +97,70 @@ function loadXMLFile() {
                 title: name,
                 icon: './public/location_icon.png',
                 name: name,
-                phone: name,
-                address: name,
+                phone: phone,
+                address: address,
                 city: city,
                 state: state,
                 zip: zip
             });
 
             google.maps.event.addListener(newMarker, 'click', function() {
-                alert("name: "+this.name+"\naddress: "+address+"\ncity: "+city+"\nstate: "+state+"\nphone: "+phone+"\nstarRating: "+starRating+"\nexpireDate: "+expireDate);
+                var options = {
+                    "name":name,
+                    "phone": phone,
+                    "address": address,
+                    "city": city,
+                    "state": state,
+                    "zip": zip,
+                    "rating":starRating,
+                    "expireDate":expireDate
+                };
+
+                $(document.getElementById('myModalLabel')).text(name);
+                $(document.getElementById('myModalPhone')).text(phone).attr("href","tel:"+phone);
+                $(document.getElementById('myModalAddress')).text(address);
+                $(document.getElementById('myModalCity')).text(city);
+                $(document.getElementById('myModalState')).text(state);
+                $(document.getElementById('myModalZip')).text(zip);
+                $(document.getElementById('myModal')).modal('show');
+                $(document.getElementById('ratingStars')).empty();
+                var star = "<img src='./public/images/check_box.png' height='32px' class='dInline'>";
+                for(var index=0; index<starRating;index++){
+                    $(document.getElementById('ratingStars')).append(star);
+                }
+                $(document.getElementById('ratingText')).empty();
+                $(document.getElementById('ratingText')).append("<span>"+starRating+"\/5</span>");
+                $(document.getElementById('expire')).text(expireDate);
             });
+            markers.push(newMarker);
+
+            if (myLocation!=null)myLocation.setMap(mapOnPage);
+            setAllMap(mapOnPage);
         });
+    }
+    function setAllMap(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
     }
 }
 
-$(".btn-success").click(function(){
-    var zip =   $(document.getElementById("zipInput"));
+$('.btn-success').click(function(e) {
+    e.preventDefault();
+    loadXMLFile();
+});
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+$().ready(function(){
+    google.maps.event.addDomListener(window, 'load', initialize);
+    $(".hFull").height(mapSize);
+});
+$( window ).resize(function() {
+    var winHeight = $(window).outerHeight(),
+        navHeight = $(".navbar").outerHeight(),
+        jumboHeight = $(document.getElementById("missionStatement")).outerHeight(),
+        mapSize = winHeight - navHeight - jumboHeight;
+    $(".hFull").height(mapSize);
 });
